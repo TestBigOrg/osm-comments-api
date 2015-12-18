@@ -13,15 +13,15 @@ module.exports.getChangesetTagsQuery = getChangesetTagsQuery;
 function getSearchQuery(params) {
     var sql = squel.select()
         .from('changesets')
+        .join('changeset_comments', 'c', 'changesets.id = c.changeset_id')
         .left_outer_join('changeset_tags', null, 'changesets.id = changeset_tags.changeset_id AND changeset_tags.key=\'comment\'')
-        .left_outer_join('changeset_comments', null, 'changesets.id = changeset_comments.changeset_id')
-        .join('users', null, 'changesets.user_id = users.id')
-        .field('COUNT(DISTINCT(changeset_comments.id))', 'discussion_count');
+        .join('users', null, 'changesets.user_id = users.id');
     sql = addFields(sql);
     sql = addWhereClauses(sql, params);
-    sql = addGroupBy(sql);
+    // sql = addGroupBy(sql);
     sql = addOrderBy(sql, params);
     sql = addOffsetLimit(sql, params);
+    console.log(sql.toParam());
     return sql.toParam();
 }
 
@@ -29,7 +29,6 @@ function getCountQuery(params) {
     var sql = squel.select()
         .from('changesets')
         .join('changeset_tags', null, 'changesets.id = changeset_tags.changeset_id')
-        .left_outer_join('changeset_comments', null, 'changesets.id = changeset_comments.changeset_id')
         .join('users', null, 'changesets.user_id = users.id')
         .field('COUNT(DISTINCT(changesets.id))', 'count');
     sql = addWhereClauses(sql, params);
@@ -68,12 +67,12 @@ function getChangesetTagsQuery(id) {
     return sql.toParam();
 }
 
-function addGroupBy(sql) {
-    sql.group('changesets.id')
-        .group('users.name')
-        .group('changeset_tags.value');
-    return sql;
-}
+// function addGroupBy(sql) {
+//     sql.group('changesets.id')
+//         .group('users.name')
+//         .group('changeset_tags.value');
+//     return sql;
+// }
 
 function addFields(sql) {
     sql.field('changesets.id', 'id')
@@ -81,6 +80,7 @@ function addFields(sql) {
         .field('changesets.closed_at', 'closed_at')
         .field('changesets.is_open', 'is_open')
         .field('changesets.user_id', 'user_id')
+        .field('changesets.discussion_count', 'discussion_count')
         .field('changeset_tags.value', 'changeset_comment')
         .field('users.name', 'user_name')
         .field('changesets.num_changes', 'num_changes')
@@ -116,11 +116,10 @@ function addWhereClauses(sql, params) {
         sql.where('to_tsvector(\'english\', changeset_tags.value) @@ plainto_tsquery(?)', comment);
     }
     if (discussion) {
-        sql.join('changeset_comments', 'c', 'changesets.id = changeset_comments.changeset_id');
         sql.where('to_tsvector(\'english\', c.comment) @@ plainto_tsquery(?)', discussion);
     }
     if (text) {
-        sql.left_outer_join('changeset_comments', 'c', 'changesets.id = changeset_comments.changeset_id');
+        sql.left_outer_join('changeset_comments', 'c', 'changesets.id = c.changeset_id');
         sql.where(
             squel.expr().or_begin()
                 .or('to_tsvector(\'english\', changeset_tags.value) @@ plainto_tsquery(?)', text)
@@ -134,11 +133,10 @@ function addWhereClauses(sql, params) {
         sql.where('ST_Intersects(changesets.bbox, ST_SetSRID(ST_GeomFromGeoJSON(?), 4326))', polygonGeojson);
     }
     if (hasDiscussion || discussedAtSort || isUnreplied === 'true') {
-        sql.having('COUNT(changeset_comments.id) > 0')
-            .group('changesets.id');
+        sql.where('changesets.discussion_count > 0');
     }
     if (isUnreplied && isUnreplied === 'true') {
-        sql.where('changesets.user_id != changeset_comments.user_id');
+        sql.where('changesets.user_id != c.user_id');
     }
     return sql;
 }
@@ -156,7 +154,7 @@ function addOrderBy(sql, params) {
         return sql;
     }
     if (field === 'discussed_at') {
-        sql.field('MAX(changeset_comments.timestamp)', 'last_comment');
+        sql.field('MAX(c.timestamp)', 'last_comment');
         field = 'last_comment';
     }
     var isAscending = operator === '+';

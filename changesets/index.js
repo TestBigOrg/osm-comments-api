@@ -23,6 +23,7 @@ changesets.search = function(params, callback) {
     var q = queue(2);
     pg.connect(pgURL, function(err, client, done) {
         if (err) {
+            console.log('error', err);
             callback(err, null);
             return;
         }
@@ -31,6 +32,7 @@ changesets.search = function(params, callback) {
         q.awaitAll(function(err, results) {
             done();
             if (err) {
+                console.log('error', err);
                 callback(err, null);
                 return;
             }
