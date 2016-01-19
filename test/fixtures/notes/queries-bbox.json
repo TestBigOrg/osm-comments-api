@@ -1,7 +1,7 @@
 {
-  "description": "test with bbox params=-80,-80,60,60 returns expected results",
+  "description": "test with bbox params=-13,46,32,50 returns expected results",
   "params": {
-    "bbox": "-80,-80,60,60"
+    "bbox": "-13,46,32,50"
   },
   "geojson": {
     "type": "FeatureCollection",
@@ -51,77 +51,8 @@
           "lastCommentAction": "closed",
           "commentCount": "2"
         }
-      },
-      {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            6.1373234,
-            50.7550836
-          ]
-        },
-        "properties": {
-          "id": 8,
-          "createdAt": "2013-04-24T08:15:06.000Z",
-          "closedAt": null,
-          "note": "test",
-          "userName": "Oli-Wan",
-          "lastCommentComment": "test close",
-          "lastCommentTimestamp": "2013-05-24T08:15:07.000Z",
-          "lastCommentUserName": "Oli-Wan",
-          "lastCommentUserID": null,
-          "lastCommentAction": "closed",
-          "commentCount": "2"
-        }
-      },
-      {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            1.8605947,
-            50.9381992
-          ]
-        },
-        "properties": {
-          "id": 7,
-          "createdAt": "2013-04-24T08:14:28.000Z",
-          "closedAt": "2013-04-24T08:14:50.000Z",
-          "note": "Adresse complète :\nB&B CALAIS Centre St Pierre \t \nZAC Curie\nRue de Lille\n62100 CALAIS\nTel. 08 92 70 75 18 (0.34€ TTC/mn depuis un poste fixe)\nFax. 03 21 00 92 71\nParking, accès handicapé, wifi, ascenseur, caméra",
-          "userName": null,
-          "lastCommentComment": null,
-          "lastCommentTimestamp": "2013-04-24T08:14:50.000Z",
-          "lastCommentUserName": "Marcussacapuces91",
-          "lastCommentUserID": null,
-          "lastCommentAction": "closed",
-          "commentCount": "2"
-        }
-      },
-      {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            -0.0112063,
-            51.760921
-          ]
-        },
-        "properties": {
-          "id": 5,
-          "createdAt": "2013-04-24T08:10:38.000Z",
-          "closedAt": "2013-04-24T21:31:47.000Z",
-          "note": "This building has been demolished and is currently a construction site.",
-          "userName": "TomH",
-          "lastCommentComment": null,
-          "lastCommentTimestamp": "2013-04-24T21:31:47.000Z",
-          "lastCommentUserName": "TomH",
-          "lastCommentUserID": null,
-          "lastCommentAction": "closed",
-          "commentCount": "2"
-        }
       }
     ],
-    "total": "5"
+    "total": "2"
   }
 }

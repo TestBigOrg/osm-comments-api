@@ -1,7 +1,7 @@
 [
     {
-        "description": "test with bbox params=-80,-80,60,60 returns expected results",
-        "url": "/api/v1/notes?bbox=-80,-80,60,60",
+        "description": "test with bbox params=-13,46,32,50 returns expected results",
+        "url": "/api/v1/notes?bbox=-13,46,32,50",
         "fixture": "queries-bbox.json"
     },
     {
